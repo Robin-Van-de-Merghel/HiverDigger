@@ -31,7 +31,7 @@ func (p *IPSPlugin) Run(hive *regf.Hive) error {
 	// Step 1: Find current ControlSet
 	controlSetName, err := p.findCurrentControlSet(hive)
 	if err != nil {
-		return fmt.Errorf("failed to find current ControlSet: %w", err)
+		return fmt.Errorf("failed to find current controlset: %w", err)
 	}
 
 	fmt.Printf("Current ControlSet: %s\n\n", controlSetName)
@@ -40,7 +40,7 @@ func (p *IPSPlugin) Run(hive *regf.Hive) error {
 	interfacesPath := fmt.Sprintf("%s\\Services\\Tcpip\\Parameters\\Interfaces", controlSetName)
 	interfacesKey, err := hive.GetKey(interfacesPath)
 	if err != nil {
-		return fmt.Errorf("failed to find Interfaces key: %w", err)
+		return fmt.Errorf("failed to find interfaces key: %w", err)
 	}
 
 	// Step 3: Iterate through interface subkeys
@@ -80,7 +80,7 @@ func (p *IPSPlugin) findCurrentControlSet(hive *regf.Hive) (string, error) {
 		}
 	}
 
-	return "", fmt.Errorf("Current value not found in Select key")
+	return "", fmt.Errorf("current value not found in select key")
 }
 
 // printInterface prints IP configuration for a single interface.

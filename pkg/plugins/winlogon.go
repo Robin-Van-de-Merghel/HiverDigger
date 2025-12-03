@@ -30,7 +30,7 @@ func (p *WinlogonPlugin) Run(hive *regf.Hive) error {
 
 	key, err := hive.GetKey(path)
 	if err != nil {
-		return fmt.Errorf("Winlogon key not found: %w", err)
+		return fmt.Errorf("winlogon key not found: %w", err)
 	}
 
 	fmt.Println("Winlogon Information")

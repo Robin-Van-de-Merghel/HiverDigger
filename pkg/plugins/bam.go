@@ -113,5 +113,5 @@ func (p *BAMPlugin) findCurrentControlSet(hive *regf.Hive) (string, error) {
 		}
 	}
 
-	return "", fmt.Errorf("Current value not found in Select key")
+	return "", fmt.Errorf("current value not found in select key")
 }

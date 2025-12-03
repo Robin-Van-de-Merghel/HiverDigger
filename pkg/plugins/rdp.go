@@ -52,5 +52,5 @@ func (p *TerminalServerPlugin) Run(hive *regf.Hive) error {
 		return nil
 	}
 
-	return fmt.Errorf("Terminal Server key not found")
+	return fmt.Errorf("terminal server key not found")
 }

@@ -39,7 +39,7 @@ type viewMode int
 const (
 	workflowSelectionMode viewMode = iota
 	hiveBrowserMode
-	pluginBrowserMode // New: Browse plugins first
+	pluginBrowserMode          // New: Browse plugins first
 	hiveSelectionForPluginMode // New: Select hive(s) after plugin selection
 	pluginSelectorMode
 	resultViewMode
@@ -53,28 +53,25 @@ const (
 )
 
 type model struct {
-	mode              viewMode
-	workflow          workflowType
-	hives             []Hive
-	hiveList          list.Model
-	pluginList        list.Model
-	workflowList      list.Model // New: workflow selection list
-	allPluginItems    []list.Item // Store all plugins
-	viewport          viewport.Model
-	searchInput       textinput.Model
-	selectedHive      *Hive
-	selectedHives     []*Hive // New: multiple hive selection
-	selectedPlugin    string
-	selectedPlugins   []string // New: multiple plugin selection
-	result            string
-	scanning          bool
-	scanPath          string
-	ready             bool
-	width             int
-	height            int
-	err               error
-	filterByHiveType  bool // Toggle for filtering plugins by hive type
-	runAllMode        bool // New: whether to run plugin on all compatible hives
+	mode             viewMode
+	workflow         workflowType
+	hives            []Hive
+	hiveList         list.Model
+	pluginList       list.Model
+	workflowList     list.Model  // New: workflow selection list
+	allPluginItems   []list.Item // Store all plugins
+	viewport         viewport.Model
+	searchInput      textinput.Model
+	selectedHive     *Hive
+	selectedPlugin   string
+	result           string
+	scanning         bool
+	scanPath         string
+	ready            bool
+	width            int
+	height           int
+	err              error
+	filterByHiveType bool // Toggle for filtering plugins by hive type
 }
 
 type scanCompleteMsg struct {
@@ -245,7 +242,11 @@ func scanForHives(searchPath string) tea.Cmd {
 				if err != nil {
 					return nil
 				}
-				defer f.Close()
+				defer func() {
+					if err := f.Close(); err != nil {
+						fmt.Printf("failed to close file %q: %v", path, err)
+					}
+				}()
 
 				sig := make([]byte, 4)
 				if n, err := f.Read(sig); err != nil || n != 4 || string(sig) != "regf" {
@@ -293,7 +294,11 @@ func runPlugin(hive *Hive, pluginName string) tea.Cmd {
 		// Run plugin
 		err = plugin.Run(hive.hiveData)
 
-		w.Close()
+		writeError := w.Close()
+		if writeError != nil {
+			return pluginResultMsg{result: "", err: writeError}
+		}
+
 		os.Stdout = oldStdout
 
 		var result strings.Builder
@@ -319,7 +324,7 @@ func runPlugin(hive *Hive, pluginName string) tea.Cmd {
 // updatePluginList updates the plugin list based on current filter settings
 func (m model) updatePluginList() model {
 	var filteredItems []list.Item
-	
+
 	if m.filterByHiveType && m.selectedHive != nil {
 		// Filter plugins by hive type
 		compatibleNames := plugins.ListForHiveType(m.selectedHive.Type)
@@ -327,7 +332,7 @@ func (m model) updatePluginList() model {
 		for _, name := range compatibleNames {
 			compatibleMap[name] = true
 		}
-		
+
 		for _, item := range m.allPluginItems {
 			if pItem, ok := item.(pluginItem); ok {
 				if compatibleMap[pItem.name] {
@@ -339,17 +344,17 @@ func (m model) updatePluginList() model {
 		// Show all plugins
 		filteredItems = m.allPluginItems
 	}
-	
+
 	m.pluginList.SetItems(filteredItems)
-	
+
 	// Update title to show filter status
 	if m.filterByHiveType && m.selectedHive != nil {
-		m.pluginList.Title = fmt.Sprintf("Plugins for %s (Filtered - %d/%d)", 
+		m.pluginList.Title = fmt.Sprintf("Plugins for %s (Filtered - %d/%d)",
 			m.selectedHive.Type, len(filteredItems), len(m.allPluginItems))
 	} else {
 		m.pluginList.Title = fmt.Sprintf("Available Plugins (All - %d)", len(filteredItems))
 	}
-	
+
 	return m
 }
 
@@ -358,7 +363,7 @@ func (m model) updateHiveListForPlugin() model {
 	if m.selectedPlugin == "" {
 		return m
 	}
-	
+
 	// Find compatible hives for this plugin
 	compatibleHives := make([]list.Item, 0)
 	for _, hive := range m.hives {
@@ -366,11 +371,11 @@ func (m model) updateHiveListForPlugin() model {
 			compatibleHives = append(compatibleHives, hive)
 		}
 	}
-	
+
 	m.hiveList.SetItems(compatibleHives)
-	m.hiveList.Title = fmt.Sprintf("Compatible Hives for '%s' (%d/%d)", 
+	m.hiveList.Title = fmt.Sprintf("Compatible Hives for '%s' (%d/%d)",
 		m.selectedPlugin, len(compatibleHives), len(m.hives))
-	
+
 	return m
 }
 
@@ -383,11 +388,11 @@ func (m model) resetLists() model {
 	}
 	m.hiveList.SetItems(items)
 	m.hiveList.Title = "Registry Hives"
-	
+
 	// Reset plugin list to show all plugins
 	m.pluginList.SetItems(m.allPluginItems)
 	m.pluginList.Title = "Available Plugins"
-	
+
 	return m
 }
 
@@ -420,7 +425,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Close all open hives
 			for i := range m.hives {
 				if m.hives[i].hiveData != nil {
-					m.hives[i].hiveData.Close()
+					err := m.hives[i].hiveData.Close()
+					if err != nil {
+						fmt.Printf("Error closing hive %d: %v\n", i, err)
+					}
 				}
 			}
 			return m, tea.Quit
@@ -559,7 +567,7 @@ func (m model) View() string {
 	case workflowSelectionMode:
 		title := titleStyle.Render("HiveDigger - Select Analysis Workflow")
 		help := helpStyle.Render("Enter: Select Workflow | q: Quit")
-		
+
 		content = fmt.Sprintf("%s\n\n%s\n\n%s",
 			title,
 			m.workflowList.View(),
@@ -586,7 +594,7 @@ func (m model) View() string {
 	case pluginBrowserMode:
 		title := titleStyle.Render("HiveDigger - Plugin Browser")
 		help := helpStyle.Render("Enter: Select Plugin | b: Go Back | q: Quit | /: Search")
-		
+
 		content = fmt.Sprintf("%s\n\n%s\n\n%s",
 			title,
 			m.pluginList.View(),
@@ -596,7 +604,7 @@ func (m model) View() string {
 	case hiveSelectionForPluginMode:
 		title := titleStyle.Render(fmt.Sprintf("HiveDigger - Select Hive for Plugin: %s", m.selectedPlugin))
 		help := helpStyle.Render("Enter: Run Plugin | b: Go Back | q: Quit | /: Filter")
-		
+
 		content = fmt.Sprintf("%s\n\n%s\n\n%s",
 			title,
 			m.hiveList.View(),
@@ -605,7 +613,7 @@ func (m model) View() string {
 
 	case pluginSelectorMode:
 		title := titleStyle.Render(fmt.Sprintf("HiveDigger - Select Plugin for: %s", m.selectedHive.Name))
-		
+
 		// Build help text with filter status
 		filterStatus := ""
 		if m.filterByHiveType {

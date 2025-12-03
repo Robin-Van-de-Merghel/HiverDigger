@@ -31,7 +31,7 @@ func (p *ServicesPlugin) Run(hive *regf.Hive) error {
 	// Find current ControlSet
 	controlSet, err := p.findCurrentControlSet(hive)
 	if err != nil {
-		return fmt.Errorf("failed to find current ControlSet: %w", err)
+		return fmt.Errorf("failed to find current controlset: %w", err)
 	}
 
 	fmt.Printf("Windows Services (from %s)\n", controlSet)
@@ -41,7 +41,7 @@ func (p *ServicesPlugin) Run(hive *regf.Hive) error {
 	servicesPath := fmt.Sprintf("%s\\Services", controlSet)
 	servicesKey, err := hive.GetKey(servicesPath)
 	if err != nil {
-		return fmt.Errorf("failed to find Services key: %w", err)
+		return fmt.Errorf("failed to find services key: %w", err)
 	}
 
 	for _, svcKey := range servicesKey.Subkeys() {
@@ -69,7 +69,7 @@ func (p *ServicesPlugin) findCurrentControlSet(hive *regf.Hive) (string, error) 
 		}
 	}
 
-	return "", fmt.Errorf("Current value not found")
+	return "", fmt.Errorf("current value not found")
 }
 
 func (p *ServicesPlugin) printService(svcKey *regf.Key) {

@@ -32,14 +32,14 @@ func (p *ShimCachePlugin) Run(hive *regf.Hive) error {
 	// Find current ControlSet
 	controlSetName, err := p.findCurrentControlSet(hive)
 	if err != nil {
-		return fmt.Errorf("failed to find current ControlSet: %w", err)
+		return fmt.Errorf("failed to find current controlset: %w", err)
 	}
 
 	// Path to AppCompatCache
 	path := fmt.Sprintf("%s/Control/Session Manager/AppCompatCache", controlSetName)
 	key, err := hive.GetKey(path)
 	if err != nil {
-		return fmt.Errorf("AppCompatCache key not found: %w", err)
+		return fmt.Errorf("appcompatcache key not found: %w", err)
 	}
 
 	fmt.Printf("AppCompatCache entries from %s:\n", path)
@@ -50,7 +50,7 @@ func (p *ShimCachePlugin) Run(hive *regf.Hive) error {
 		if val.Name() == "AppCompatCache" {
 			data := val.Bytes()
 			fmt.Printf("\nFound AppCompatCache data (%d bytes)\n", len(data))
-			
+
 			if len(data) < 16 {
 				fmt.Println("Data too small to parse")
 				return nil
@@ -61,7 +61,7 @@ func (p *ShimCachePlugin) Run(hive *regf.Hive) error {
 			if len(data) >= 4 {
 				signature := binary.LittleEndian.Uint32(data[0:4])
 				fmt.Printf("Signature: 0x%08x\n", signature)
-				
+
 				// Note: Full ShimCache parsing is complex and version-dependent
 				// This is a basic implementation showing the concept
 				fmt.Println("\nNote: Full ShimCache parsing requires version-specific logic.")
@@ -86,5 +86,5 @@ func (p *ShimCachePlugin) findCurrentControlSet(hive *regf.Hive) (string, error)
 		}
 	}
 
-	return "", fmt.Errorf("Current value not found in Select key")
+	return "", fmt.Errorf("current value not found in select key")
 }

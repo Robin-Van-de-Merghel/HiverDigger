@@ -45,7 +45,10 @@ func OpenFile(path string) (*Hive, error) {
 
 	hive, err := OpenReader(f)
 	if err != nil {
-		f.Close()
+		fileCloseError := f.Close()
+		if fileCloseError != nil {
+			return nil, fmt.Errorf("could not close the file while handling %v", err)
+		}
 		return nil, err
 	}
 

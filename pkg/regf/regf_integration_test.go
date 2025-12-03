@@ -51,7 +51,11 @@ func TestOpenReader_ValidSignature(t *testing.T) {
 		t.Errorf("expected fileSize %d, got %d", len(data), hive.fileSize)
 	}
 
-	hive.Close()
+	defer func() {
+		if err := hive.Close(); err != nil {
+			t.Fatalf("could not close a hive")
+		}
+	}()
 }
 
 func TestSplitPath(t *testing.T) {
@@ -118,7 +122,11 @@ func TestOpenFile_WithRealHive(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to open example SYSTEM hive: %v", err)
 	}
-	defer hive.Close()
+	defer func() {
+		if err := hive.Close(); err != nil {
+			t.Fatalf("failed to close a hive")
+		}
+	}()
 
 	// Verify we can get root key
 	root := hive.RootKey()
@@ -152,7 +160,11 @@ func TestGetKey_CaseInsensitive(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to open example SYSTEM hive: %v", err)
 	}
-	defer hive.Close()
+	defer func() {
+		if err := hive.Close(); err != nil {
+			t.Fatalf("failed to close a hive")
+		}
+	}()
 
 	// Try different case variations
 	key1, err1 := hive.GetKey("Select")
@@ -178,7 +190,11 @@ func TestRawCellAt(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to open example SYSTEM hive: %v", err)
 	}
-	defer hive.Close()
+	defer func() {
+		if err := hive.Close(); err != nil {
+			t.Fatalf("failed to close a hive")
+		}
+	}()
 
 	// Try to get raw cell at offset 0x1020 (typical first cell)
 	raw, err := hive.RawCellAt(0x1020)
@@ -199,7 +215,11 @@ func TestIterateCells(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to open example SYSTEM hive: %v", err)
 	}
-	defer hive.Close()
+	defer func() {
+		if err := hive.Close(); err != nil {
+			t.Fatalf("failed to close a hive")
+		}
+	}()
 
 	count := 0
 	hive.IterateCells(func(offset int64, cell *Cell) bool {

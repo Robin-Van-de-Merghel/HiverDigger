@@ -44,7 +44,7 @@ func (p *ServicesExPlugin) Run(hive *regf.Hive) error {
 	count := 0
 	for _, svc := range servicesKey.Subkeys() {
 		var displayName, imageType, start string
-		
+
 		for _, val := range svc.Values() {
 			switch val.Name() {
 			case "DisplayName":
@@ -55,28 +55,33 @@ func (p *ServicesExPlugin) Run(hive *regf.Hive) error {
 				start = GetValueString(val)
 			}
 		}
-		
+
 		if displayName != "" || start != "" {
 			fmt.Printf("\n[%s] %s\n", svc.Timestamp().Format("2006-01-02 15:04:05"), svc.Name())
 			if displayName != "" {
 				fmt.Printf("  Display Name: %s\n", displayName)
 			}
-			
+
 			for _, val := range svc.Values() {
 				name := val.Name()
-				if name == "ImagePath" {
+				switch name {
+				case "ImagePath":
 					fmt.Printf("  Image Path: %s\n", GetValueString(val))
-				} else if name == "Type" {
+
+				case "Type":
 					fmt.Printf("  Type: %s\n", imageType)
-				} else if name == "Start" {
+
+				case "Start":
 					fmt.Printf("  Start: %s\n", start)
-				} else if name == "DependOnService" {
+
+				case "DependOnService":
 					fmt.Printf("  Dependencies: %s\n", GetValueString(val))
-				} else if name == "Group" {
+
+				case "Group":
 					fmt.Printf("  Group: %s\n", GetValueString(val))
 				}
 			}
-			
+
 			count++
 			if count >= 100 {
 				fmt.Println("\n... (showing first 100 services)")

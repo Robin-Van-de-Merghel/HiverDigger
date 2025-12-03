@@ -30,7 +30,7 @@ func (p *FileAssocPlugin) Run(hive *regf.Hive) error {
 
 	key, err := hive.GetKey(path)
 	if err != nil {
-		return fmt.Errorf("Classes key not found: %w", err)
+		return fmt.Errorf("classes key not found: %w", err)
 	}
 
 	fmt.Println("File Associations")

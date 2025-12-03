@@ -42,7 +42,11 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error opening hive: %v\n", err)
 		os.Exit(1)
 	}
-	defer hive.Close()
+	defer func() {
+		if err := hive.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "Error closing hive: %v\n", err)
+		}
+	}()
 
 	// Get the plugin
 	plugin, err := plugins.Get(pluginName)

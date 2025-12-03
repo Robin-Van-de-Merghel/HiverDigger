@@ -30,7 +30,7 @@ func (p *MapNetworkDrivePlugin) Run(hive *regf.Hive) error {
 
 	key, err := hive.GetKey(path)
 	if err != nil {
-		return fmt.Errorf("Network key not found: %w", err)
+		return fmt.Errorf("network key not found: %w", err)
 	}
 
 	fmt.Println("Mapped Network Drives")

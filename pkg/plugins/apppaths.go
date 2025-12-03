@@ -30,7 +30,7 @@ func (p *AppPathsPlugin) Run(hive *regf.Hive) error {
 
 	key, err := hive.GetKey(path)
 	if err != nil {
-		return fmt.Errorf("App Paths key not found: %w", err)
+		return fmt.Errorf("app paths key not found: %w", err)
 	}
 
 	fmt.Println("Application Paths")

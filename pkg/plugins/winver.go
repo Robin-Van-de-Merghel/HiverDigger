@@ -30,7 +30,7 @@ func (p *WindowsVersionPlugin) Run(hive *regf.Hive) error {
 
 	key, err := hive.GetKey(path)
 	if err != nil {
-		return fmt.Errorf("Windows version key not found: %w", err)
+		return fmt.Errorf("windows version key not found: %w", err)
 	}
 
 	fmt.Println("Windows Version Information")

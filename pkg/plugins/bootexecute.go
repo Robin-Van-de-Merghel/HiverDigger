@@ -54,5 +54,5 @@ func (p *BootExecutePlugin) Run(hive *regf.Hive) error {
 		return nil
 	}
 
-	return fmt.Errorf("Session Manager key not found")
+	return fmt.Errorf("session manager key not found")
 }

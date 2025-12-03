@@ -39,7 +39,7 @@ var hiveTypeMap = make(map[string][]string) // plugin name -> compatible hive ty
 // Register registers a plugin with the given name.
 func Register(p Plugin) {
 	registry[p.Name()] = p
-	
+
 	// Check if plugin implements HiveTypePlugin
 	if htp, ok := p.(HiveTypePlugin); ok {
 		types := htp.CompatibleHiveTypes()
@@ -86,7 +86,7 @@ func IsCompatibleWithHiveType(pluginName, hiveType string) bool {
 		// Plugin doesn't specify types, so it's compatible with all
 		return true
 	}
-	
+
 	// Check if hiveType matches any of the compatible types
 	for _, t := range types {
 		if t == hiveType {
@@ -194,7 +194,7 @@ func findCurrentControlSet(hive *regf.Hive) (string, error) {
 		}
 	}
 
-	return "", fmt.Errorf("Current value not found in Select key")
+	return "", fmt.Errorf("current value not found in select key")
 }
 
 // getSubkey is a helper to get a subkey by name
