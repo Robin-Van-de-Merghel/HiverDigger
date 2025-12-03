@@ -1,6 +1,18 @@
 # HiveDigger
 
-HiveDigger is a pure-Go parser for Windows Registry hive files (REGF format) with a plugin-based architecture for forensic analysis. It includes both a command-line interface and an interactive Terminal User Interface (TUI) with dual workflow modes.
+HiveDigger is **vibe-coded** a pure-Go parser for Windows Registry hive files (REGF format) with a plugin-based architecture for forensic analysis. It includes both a command-line interface and an interactive Terminal User Interface (TUI) with dual workflow modes.
+
+> [!NOTE]
+> As a vibe-coded project, it as some flaws and bug. You are welcome to contribute to make it more production ready!
+
+
+## Why vibe coding?
+
+During my cyber-security courses, I needed a tool to analyze hives. I found the super cool projects from [@Eric Zimmerman](https://ericzimmerman.github.io), but it was in pearl.
+
+I recently started coding in *go*, so I thought it was the right time to adapt a program into go!
+
+But as I had to have this project working quickly, I vibe-coded it. When I'll have some time, I'll correct as much as I can so that this project has a production ready structure!
 
 ## Features
 
@@ -228,7 +240,3 @@ Potential enhancements:
 
 - [Windows Registry File Format Specification](https://github.com/msuhanov/regf/blob/master/Windows%20registry%20file%20format%20specification.md)
 - [RegRipper by keydet89](https://github.com/keydet89/RegRipper3.0)
-
-## License
-
-[Add your license here]
