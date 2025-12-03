@@ -1,0 +1,25 @@
+# Binaries
+/hivedigger
+/hivedigger-tui
+hivedigger.exe
+hivedigger-tui.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Dependencies
+vendor/
