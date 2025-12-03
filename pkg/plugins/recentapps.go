@@ -38,7 +38,7 @@ func (p *RecentAppsPlugin) Run(hive *regf.Hive) error {
 
 	for _, app := range appsKey.Subkeys() {
 		fmt.Printf("\n[%s]\n", app.Timestamp().Format("2006-01-02 15:04:05"))
-		
+
 		for _, val := range app.Values() {
 			if val.Name() == "AppId" || val.Name() == "AppPath" ||
 				val.Name() == "LastAccessedTime" {

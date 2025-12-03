@@ -45,7 +45,7 @@ func (p *USBSTORPlugin) Run(hive *regf.Hive) error {
 		for _, instance := range deviceType.Subkeys() {
 			fmt.Printf("\nDevice: %s\n", deviceType.Name())
 			fmt.Printf("  Serial: %s\n", instance.Name())
-			
+
 			for _, val := range instance.Values() {
 				if val.Name() == "FriendlyName" || val.Name() == "DeviceDesc" ||
 					val.Name() == "ParentIdPrefix" {

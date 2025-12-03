@@ -32,7 +32,7 @@ func (p *JumpListsPlugin) Run(hive *regf.Hive) error {
 	if taskband, err := hive.GetKey(taskbandPath); err == nil {
 		fmt.Println("TaskBand Jump Lists:")
 		fmt.Println(strings.Repeat("=", 80))
-		
+
 		for _, val := range taskband.Values() {
 			if strings.Contains(val.Name(), "Favorites") {
 				fmt.Printf("%s: %d bytes\n", val.Name(), len(val.Bytes()))
@@ -45,7 +45,7 @@ func (p *JumpListsPlugin) Run(hive *regf.Hive) error {
 	if dest, err := hive.GetKey(destPath); err == nil {
 		fmt.Println("\nRecently Used Applications:")
 		fmt.Println(strings.Repeat("=", 80))
-		
+
 		for _, val := range dest.Values() {
 			fmt.Printf("%s: %s\n", val.Name(), GetValueString(val))
 		}

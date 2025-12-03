@@ -44,7 +44,7 @@ func (p *USBPlugin) Run(hive *regf.Hive) error {
 	for _, deviceClass := range usbKey.Subkeys() {
 		for _, device := range deviceClass.Subkeys() {
 			fmt.Printf("\nDevice: %s\\%s\n", deviceClass.Name(), device.Name())
-			
+
 			for _, val := range device.Values() {
 				if val.Name() == "DeviceDesc" || val.Name() == "FriendlyName" ||
 					val.Name() == "Mfg" || val.Name() == "Service" {

@@ -37,15 +37,15 @@ func (p *SAMParsePlugin) Run(hive *regf.Hive) error {
 	fmt.Println(strings.Repeat("=", 80))
 
 	namesKey, _ := getSubkey(usersKey, "Names")
-	
+
 	for _, user := range usersKey.Subkeys() {
 		if user.Name() == "Names" {
 			continue
 		}
-		
+
 		fmt.Printf("\nRID: %s\n", user.Name())
 		fmt.Printf("Last Write: %s\n", user.Timestamp().Format("2006-01-02 15:04:05"))
-		
+
 		// Try to find username from Names subkey
 		if namesKey != nil {
 			for _, nameEntry := range namesKey.Subkeys() {
@@ -57,7 +57,7 @@ func (p *SAMParsePlugin) Run(hive *regf.Hive) error {
 				}
 			}
 		}
-		
+
 		// Parse F value (contains last login, etc.)
 		if fVal, err := getValue(user, "F"); err == nil {
 			data := fVal.Bytes()

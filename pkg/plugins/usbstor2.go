@@ -46,7 +46,7 @@ func (p *USBSTOR2Plugin) Run(hive *regf.Hive) error {
 			fmt.Printf("\n[%s]\n", instance.Timestamp().Format("2006-01-02 15:04:05"))
 			fmt.Printf("Device: %s\n", deviceType.Name())
 			fmt.Printf("Instance: %s\n", instance.Name())
-			
+
 			if props, err := getSubkey(instance, "Properties"); err == nil {
 				for _, guidKey := range props.Subkeys() {
 					for _, propKey := range guidKey.Subkeys() {
